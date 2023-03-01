@@ -87,5 +87,11 @@ for row in bracket_table.find_elements(By.TAG_NAME, 'tr'):
 # close the webdriver
 driver.quit()
 
-print(two)
-print(seeds)
+draw_info_path = newpath + "\draw_info.csv"
+general_info_path = newpath + "\general_info.csv"
+
+draw_info = pd.DataFrame({'Round 1': one, 'Round 2': two, 'Round 3': three, 'Round 4': four, 'Round 5': five, 'Round 6': six, 'Round 7': seven})
+draw_info.to_csv(draw_info_path, index=False)
+
+tourn_info = pd.DataFrame({'Tournament Name': name, 'Start Date': start_date, 'Players': len(one), 'Seed': len(seeds)}, index=[0])
+tourn_info.to_csv(general_info_path, index=False)
