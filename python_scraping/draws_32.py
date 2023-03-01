@@ -3,12 +3,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 import os
 import pandas as pd
+import itertools
 
 # initialize the webdriver
 driver = webdriver.Chrome()
 
 # navigate to the webpage with the tournament bracket
-driver.get("https://bwf.tournamentsoftware.com/sport/tournament/draw?id=4310C928-4346-43FA-A82B-63F58544A4EA&draw=5")
+driver.get("https://bwf.tournamentsoftware.com/sport/tournament/draw?id=9C81DC2E-84E0-4A1A-8C20-EFB1B8CB03F2&draw=1")
 
 name = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/h2/span/span').text
 start_date = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/small[2]/span/span/time[1]').text
@@ -90,8 +91,29 @@ driver.quit()
 draw_info_path = newpath + "\draw_info.csv"
 general_info_path = newpath + "\general_info.csv"
 
+max_length = max(len(x) for x in [one, two, three, four, five, six, seven])
+
+
+# Flatten the 2D lists using itertools.chain.from_iterable
+two = list(itertools.chain.from_iterable(two))
+three = list(itertools.chain.from_iterable(three))
+four = list(itertools.chain.from_iterable(four))
+five = list(itertools.chain.from_iterable(five))
+six = list(itertools.chain.from_iterable(six))
+seven = list(itertools.chain.from_iterable(seven))
+
+# Fill in missing values with NaN using pandas.Series.fillna
+one += [float('nan')] * (max_length - len(one))
+two += [float('nan')] * (max_length - len(two))
+three += [float('nan')] * (max_length - len(three))
+four += [float('nan')] * (max_length - len(four))
+five += [float('nan')] * (max_length - len(five))
+six += [float('nan')] * (max_length - len(six))
+seven += [float('nan')] * (max_length - len(seven))
+
+# Create the DataFrame with equal length columns
 draw_info = pd.DataFrame({'Round 1': one, 'Round 2': two, 'Round 3': three, 'Round 4': four, 'Round 5': five, 'Round 6': six, 'Round 7': seven})
 draw_info.to_csv(draw_info_path, index=False)
 
-tourn_info = pd.DataFrame({'Tournament Name': name, 'Start Date': start_date, 'Players': len(one), 'Seed': len(seeds)}, index=[0])
+tourn_info = pd.DataFrame({'Tournament Name': name, 'Start Date': start_date, 'Players': seeds.keys, 'Seed': seeds.values}, index=[0])
 tourn_info.to_csv(general_info_path, index=False)
