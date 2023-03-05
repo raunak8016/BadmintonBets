@@ -1,0 +1,22 @@
+#logo {
+    height: 150px;
+    width: auto;
+    margin-right: 20px;
+}
+
+#git {
+    height: 30px;
+    width: 30px;
+    margin-left: 15px;
+}
+
+.nav-link {
+    font-size: 25px;
+    font-style: bold;
+    color: #074653;
+    margin-right: 35px;
+}
+
+.container {
+    text-align: center;
+}
