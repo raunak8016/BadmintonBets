@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import '../styles/pages.css';
 
 function Data() {
 
@@ -18,13 +19,13 @@ function Data() {
 
     
     return (
-        <div>
+        <div className='page'>
            <h2>Data</h2>
             {(typeof data.rankings === 'undefined') ? (
-                <p>Loading...</p>
+                <p><img src={require('../assets/loading.gif')} alt="loading" id='loader'/></p>
             ):(
                 data.rankings.map((member, index) => (
-                    <p key={index}>{member}</p>
+                    <p key={index}>{member[0]}</p>
                 ))
             )}
         </div>

@@ -7,6 +7,6 @@ class DBReading:
     @staticmethod
     def get_rankings_db():
         rankings_db = DBReading.firebase.get('/rankings', None)
-        return rankings_db[0]
+        return rankings_db
 
 # DBReading.get_rankings_db()

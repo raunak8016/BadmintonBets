@@ -16,7 +16,7 @@ function App() {
     <>
       <Navbar bg="light" variant="light" style={{ height: '150px' }}>
         <Container>
-        <Link to="/" className="nav-link"><img src={require('./assets/logo.gif')} alt="logo" id='logo'/></Link>
+        <Link to="/" className="nav-link"><img src={require('./assets/logo1.jpg')} alt="logo" id='logo'/></Link>
         <Nav className="me-auto">
           <Link to="Rankings" className="nav-link">Rankings</Link>
           <Link to="Data" className="nav-link">Data</Link>
