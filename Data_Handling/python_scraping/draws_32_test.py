@@ -11,15 +11,15 @@ driver = webdriver.Chrome()
 # navigate to the webpage with the tournament bracket
 driver.get("https://bwf.tournamentsoftware.com/sport/tournament/draw?id=A412AEC4-F2E1-4393-94E2-2BD344F220FA&draw=1")
 
-name = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/h2/span/span').text
+t_name = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/h2/span/span').text
 start_date = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/small[2]/span/span/time[1]').text
 
 tournaments_list = pd.read_csv(r'tournament_data\tournaments_list_testing.csv')
-tournament = pd.Series({'Name': name, 'Date': start_date})
+tournament = pd.Series({'Name': t_name, 'Date': start_date})
 tournaments_list = pd.concat([tournaments_list, tournament.to_frame().T], ignore_index=True)
 tournaments_list.to_csv(r'tournament_data\tournaments_list_testing.csv', index=False)
 
-newpath = r'\tournament_data\testing\{0}'.format(name) 
+newpath = r'tournament_data\testing\{0}'.format(t_name) 
 if not os.path.exists(newpath):
     os.makedirs(newpath)
 
@@ -58,10 +58,15 @@ driver.quit()
 
 draw_info_path = newpath + "\draw_info.csv"
 general_info_path = newpath + "\general_info.csv"
-
+print(general_info_path)
 # Create the DataFrame with equal length columns
 draw_info = pd.DataFrame({'Draw': one})
 draw_info.to_csv(draw_info_path, index=False)
 
-tourn_info = pd.DataFrame({'Tournament Name': name, 'Start Date': start_date, 'Players': seeds.keys, 'Seed': seeds.values}, index=[0])
+tourn_info = pd.DataFrame(columns=['Tournament Name', 'Players', 'Seed'])
+for entry in seeds.items():
+    t_entry = pd.Series({'Tournament Name': t_name, 'Players': entry[0], 'Seed': entry[1]})
+    tourn_info = pd.concat([tourn_info, t_entry.to_frame().T], ignore_index=True)
 tourn_info.to_csv(general_info_path, index=False)
+
+print(tourn_info)

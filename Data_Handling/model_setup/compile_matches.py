@@ -3,7 +3,7 @@ import numpy as np
 
 
 def create_matches_csv():
-    path = r'C:\Users\rauna\BadmintonApp\Data_Handling\match_data.csv'
+    path = r'C:\Users\rauna\BadmintonApp\Data_Handling\match_data_train.csv'
     df = pd.DataFrame(columns=['Match Year', 'Match Stage', 'Time Duration', 
     'P1', 'P1 Country', 'P1 Ranking', 'P1 Seed', 
     'P2', 'P2 Country', 'P2 Ranking', 'P2 Seed', 
@@ -15,10 +15,26 @@ def create_matches_csv():
     'Winner'])
     df.to_csv(path, index=False)
 
-create_new_matches = True
+create_new_matches = False
 if create_new_matches:
     create_matches_csv()
 
-# Read in the data
-matches = pd.read_csv('match_data.csv')
+def insert_match_data():
+    match_data_train = pd.read_csv(r'\match_data_train.csv')
+
+    all_tournaments = pd.read_csv(r'tournament_data\tournaments_list_training.csv')
+    tourn_names = all_tournaments['Name'].to_numpy()
+    tourn_dates = all_tournaments['Date'].to_numpy()
+    for tourn_name in tourn_names:
+        path = r'tournament_data\training\{0}\draw_info.csv'.format(tourn_name)
+        draw_info = pd.read_csv(path)
+        match_data = draws_into_matches(draw_info)
+        
+       # match_data_train = pd.concat([match_data_train, match_data], ignore_index=True)
+       # match_data_train.to_csv(r'\match_data_train.csv', index=False)
+
+
+
+
+
 
