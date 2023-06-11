@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import Select
 import os
 import pandas as pd
 import itertools
+import stat
 
 def write_draw(url):
     # initialize the webdriver
@@ -14,12 +15,12 @@ def write_draw(url):
     t_name = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/h2/span/span').text
     start_date = driver.find_element(By.XPATH, '/html/body/form/div[3]/header/div[1]/div/div/div[2]/small[2]/span/span/time[1]').text
 
-    tournaments_list = pd.read_csv(r'tournament_data\tournaments_list_training.csv')
+    tournaments_list = pd.read_csv(r'C:\Users\rauna\BadmintonApp\Data_Handling\tournament_data\tournaments_list_training.csv')
     tournament = pd.Series({'Name': t_name, 'Date': start_date})
     tournaments_list = pd.concat([tournaments_list, tournament.to_frame().T], ignore_index=True)
-    tournaments_list.to_csv(r'tournament_data\tournaments_list_training.csv', index=False)
+    tournaments_list.to_csv(r'C:\Users\rauna\BadmintonApp\Data_Handling\tournament_data\tournaments_list_training.csv', index=False)
 
-    newpath = r'tournament_data\training\{0}'.format(t_name) 
+    newpath = r'C:\Users\rauna\BadmintonApp\Data_Handling\tournament_data\training\{0}'.format(t_name) 
     if not os.path.exists(newpath):
         os.makedirs(newpath)
 
@@ -51,8 +52,12 @@ def write_draw(url):
                 continue
             # if the cell contains a match, add it to the list of matches
             elif cell.text.__contains__('21'):
-                score = cell.text.strip()
-
+                sp = cell.find_element(By.TAG_NAME, 'span')
+                score = ""
+                for s in sp.find_elements(By.TAG_NAME, 'span'):
+                    score = score + ', ' + s.text
+                score = score[2:]
+                
                 if index == 2:
                     two[len(two)-1].append(score)
                 elif index == 3:
@@ -125,6 +130,7 @@ def write_draw(url):
         t_entry = pd.Series({'Tournament Name': t_name, 'Players': entry[0], 'Seed': entry[1]})
         tourn_info = pd.concat([tourn_info, t_entry.to_frame().T], ignore_index=True)
     tourn_info.to_csv(general_info_path, index=False)
+    os.chmod(general_info_path, stat.S_IREAD)
 
 urls = ['https://bwf.tournamentsoftware.com/sport/tournament/draw?id=4310C928-4346-43FA-A82B-63F58544A4EA&draw=5', 
         'https://bwf.tournamentsoftware.com/sport/tournament/draw?id=9C81DC2E-84E0-4A1A-8C20-EFB1B8CB03F2&draw=1',
